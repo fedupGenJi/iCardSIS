@@ -1,7 +1,7 @@
 #ifndef DATABASEHELPER_H
 #define DATABASEHELPER_H
 
-#include "vendors\sqlite\sqlite3.h"
+#include "A:\iCardSIS\vendors\sqlite\sqlite3.h"
 #include <string>
 #include <iostream>
 #include "DatabaseModel.h"
@@ -25,7 +25,7 @@ public:
 
     void createTable() {
         const char* sql_create_table =
-            "CREATE TABLE IF NOT EXISTS users ("
+            "CREATE TABLE IF NOT EXISTS studentID ("
             "id INTEGER PRIMARY KEY, "
             "firstName TEXT, "
             "middleName TEXT, "
@@ -48,7 +48,7 @@ public:
     }
 
     bool idExists(int id) {
-        const char* sql_select = "SELECT 1 FROM users WHERE id = ?;";
+        const char* sql_select = "SELECT 1 FROM studentID WHERE id = ?;";
         sqlite3_stmt* stmt;
 
         int rc = sqlite3_prepare_v2(db, sql_select, -1, &stmt, 0);
@@ -68,7 +68,7 @@ public:
     }
 
     void insertData(const DatabaseModel& model) {
-        const char* sql_insert = "INSERT INTO users (id, firstName, middleName, lastName, dob, bloodGroup, email, course, yearOfEnrollment, imgpath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        const char* sql_insert = "INSERT INTO studentID (id, firstName, middleName, lastName, dob, bloodGroup, email, course, yearOfEnrollment, imgpath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         sqlite3_stmt* stmt;
 
         int rc = sqlite3_prepare_v2(db, sql_insert, -1, &stmt, 0);
@@ -104,7 +104,7 @@ public:
             return;
         }
 
-        const char* sql_delete = "DELETE FROM users WHERE id = ?;";
+        const char* sql_delete = "DELETE FROM studentID WHERE id = ?;";
         sqlite3_stmt* stmt;
 
         int rc = sqlite3_prepare_v2(db, sql_delete, -1, &stmt, 0);
