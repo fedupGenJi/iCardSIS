@@ -9,8 +9,8 @@ public:
     LibManager(const std::string& dbPath);
     ~LibManager();
 
-    bool checkStudentID(int studentID);
-    void addBook(int studentID, const std::string& bookID, const std::string& bookName);
+    bool checkBorrower(int studentID);
+    void addBook(int studentID, const std::string& bookID, const std::string& bookName, const std::string& submissionDate);
     void removeBook(int studentID, const std::string& bookID);
 
 private:
@@ -18,6 +18,7 @@ private:
 
     void initializeDatabase();
     void closeDatabase();
+    std::string calculateDeadline(const std::string& submissionDate);
 };
 
 #endif // LIBMANAGER_HPP

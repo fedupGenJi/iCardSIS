@@ -1,7 +1,10 @@
 #include "LibManager.hpp"
 #include <iostream>
-#include "A:\iCardSIS\vendors\sqlite\sqlite3.h"
+#include <ctime>
+#include <sstream>
+#include <iomanip>
 
+// Constructor: Opens the database and initializes it
 LibManager::LibManager(const std::string& dbPath) : db(nullptr) {
     int rc = sqlite3_open(dbPath.c_str(), &db);
     if (rc) {
@@ -12,66 +15,140 @@ LibManager::LibManager(const std::string& dbPath) : db(nullptr) {
     initializeDatabase();
 }
 
+// Destructor: Closes the database
 LibManager::~LibManager() {
     closeDatabase();
 }
 
+// Initialize the database with Books and Borrowers tables
 void LibManager::initializeDatabase() {
-    // Create necessary tables if they don't exist
-    const char* createTableSQL =
+    const char* createBooksTableSQL =
         "CREATE TABLE IF NOT EXISTS Books ("
         "   id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "   studentID INTEGER,"
         "   bookID TEXT,"
-        "   bookName TEXT"
+        "   bookName TEXT,"
+        "   submissionDate TEXT,"
+        "   deadline TEXT"
         ");";
 
-    char* errMsg = 0;
-    if (sqlite3_exec(db, createTableSQL, 0, 0, &errMsg) != SQLITE_OK) {
-        std::cerr << "SQL error: " << errMsg << std::endl;
+    const char* createBorrowersTableSQL =
+        "CREATE TABLE IF NOT EXISTS Borrowers ("
+        "   studentID INTEGER PRIMARY KEY"
+        ");";
+
+    char* errMsg = nullptr;
+    int rc = sqlite3_exec(db, createBooksTableSQL, 0, 0, &errMsg);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error creating Books table: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+    }
+
+    rc = sqlite3_exec(db, createBorrowersTableSQL, 0, 0, &errMsg);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error creating Borrowers table: " << errMsg << std::endl;
         sqlite3_free(errMsg);
     }
 }
 
+// Close the database connection
 void LibManager::closeDatabase() {
-    sqlite3_close(db);
-    std::cout << "Closed database." << std::endl;
+    if (db) {
+        sqlite3_close(db);
+    }
 }
 
-bool LibManager::checkStudentID(int studentID) {
-    std::string sql = "SELECT COUNT(*) FROM Books WHERE studentID = " + std::to_string(studentID) + ";";
+// Check if a borrower exists in the Borrowers table
+bool LibManager::checkBorrower(int studentID) {
+    const char* checkBorrowerSQL = "SELECT COUNT(*) FROM Borrowers WHERE studentID = ?";
     sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
+    int rc = sqlite3_prepare_v2(db, checkBorrowerSQL, -1, &stmt, 0);
     if (rc != SQLITE_OK) {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
-    int result = 0;
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
-        result = sqlite3_column_int(stmt, 0);
+    sqlite3_bind_int(stmt, 1, studentID);
+    rc = sqlite3_step(stmt);
+    bool exists = false;
+    if (rc == SQLITE_ROW) {
+        exists = sqlite3_column_int(stmt, 0) > 0;
     }
     sqlite3_finalize(stmt);
-    return (result > 0);
+    return exists;
 }
 
-void LibManager::addBook(int studentID, const std::string& bookID, const std::string& bookName) {
-    std::string sql = "INSERT INTO Books (studentID, bookID, bookName) VALUES (" + std::to_string(studentID) + ", '" + bookID + "', '" + bookName + "');";
-    char* errMsg = 0;
-    if (sqlite3_exec(db, sql.c_str(), 0, 0, &errMsg) != SQLITE_OK) {
-        std::cerr << "SQL error: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-    } else {
-        std::cout << "Book added successfully." << std::endl;
+// Calculate deadline as 30 days after submission date
+std::string LibManager::calculateDeadline(const std::string& submissionDate) {
+    struct tm tm = {};
+    std::istringstream ss(submissionDate);
+    ss >> std::get_time(&tm, "%Y-%m-%d");
+    tm.tm_mday += 30;
+    mktime(&tm);
+
+    char buffer[11];
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d", &tm);
+    return std::string(buffer);
+}
+
+// Add a book record to the Books table
+void LibManager::addBook(int studentID, const std::string& bookID, const std::string& bookName, const std::string& submissionDate) {
+    std::string deadline = calculateDeadline(submissionDate);
+    const char* insertSQL = "INSERT INTO Books (studentID, bookID, bookName, submissionDate, deadline) VALUES (?, ?, ?, ?, ?)";
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, insertSQL, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
     }
+    sqlite3_bind_int(stmt, 1, studentID);
+    sqlite3_bind_text(stmt, 2, bookID.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, bookName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, submissionDate.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, deadline.c_str(), -1, SQLITE_TRANSIENT);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        std::cerr << "Error inserting data: " << sqlite3_errmsg(db) << std::endl;
+    }
+    sqlite3_finalize(stmt);
 }
 
+// Remove a book record from the Books table
 void LibManager::removeBook(int studentID, const std::string& bookID) {
-    std::string sql = "DELETE FROM Books WHERE studentID = " + std::to_string(studentID) + " AND bookID = '" + bookID + "';";
-    char* errMsg = 0;
-    if (sqlite3_exec(db, sql.c_str(), 0, 0, &errMsg) != SQLITE_OK) {
-        std::cerr << "SQL error: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-    } else {
-        std::cout << "Book removed successfully." << std::endl;
+    // Check if the book exists for the given studentID
+    const char* checkBookSQL = "SELECT COUNT(*) FROM Books WHERE studentID = ? AND bookID = ?";
+    sqlite3_stmt* checkStmt;
+    int rc = sqlite3_prepare_v2(db, checkBookSQL, -1, &checkStmt, 0);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
     }
+    sqlite3_bind_int(checkStmt, 1, studentID);
+    sqlite3_bind_text(checkStmt, 2, bookID.c_str(), -1, SQLITE_TRANSIENT);
+    rc = sqlite3_step(checkStmt);
+    bool exists = false;
+    if (rc == SQLITE_ROW) {
+        exists = sqlite3_column_int(checkStmt, 0) > 0;
+    }
+    sqlite3_finalize(checkStmt);
+
+    if (!exists) {
+        std::cerr << "Error: No book with ID " << bookID << " found for student ID " << studentID << "." << std::endl;
+        return;
+    }
+
+    // Delete the book record if it exists
+    const char* deleteSQL = "DELETE FROM Books WHERE studentID = ? AND bookID = ?";
+    sqlite3_stmt* stmt;
+    rc = sqlite3_prepare_v2(db, deleteSQL, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+    sqlite3_bind_int(stmt, 1, studentID);
+    sqlite3_bind_text(stmt, 2, bookID.c_str(), -1, SQLITE_TRANSIENT);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        std::cerr << "Error deleting data: " << sqlite3_errmsg(db) << std::endl;
+    }
+    sqlite3_finalize(stmt);
 }

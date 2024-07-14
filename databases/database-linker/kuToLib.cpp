@@ -6,7 +6,7 @@ int main() {
     std::string sourceDbPath = "A:\\iCardSIS\\databases\\ku-database\\example.db"; // Replace with your actual source database path
     std::string targetDbPath = "A:\\iCardSIS\\databases\\library-database\\library.db"; // Replace with your actual target database path
     std::string sourceTable = "studentID"; // Source table name with IDs
-    std::string targetTable = "Books"; // Target table name with studentID column
+    std::string targetTable = "Borrowers"; // Target table name with studentID column
 
     // Open source database and get IDs
     CopyDatabase sourceDb(sourceDbPath);
