@@ -29,12 +29,14 @@ void LibManager::initializeDatabase() {
         "   bookID TEXT,"
         "   bookName TEXT,"
         "   submissionDate TEXT,"
-        "   deadline TEXT"
+        "   deadline TEXT,"
+        "   days_dued INTEGER DEFAULT 0"
         ");";
 
     const char* createBorrowersTableSQL =
         "CREATE TABLE IF NOT EXISTS Borrowers ("
-        "   studentID INTEGER PRIMARY KEY"
+        "   studentID INTEGER PRIMARY KEY,"
+        "   fine INTEGER DEFAULT 0"
         ");";
 
     char* errMsg = nullptr;
