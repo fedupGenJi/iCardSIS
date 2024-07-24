@@ -34,6 +34,17 @@ bool verifyLogin(const std::string& mobile_number, const std::string& password) 
     return login_successful;
 }
 
+//function to generate a encryption
+std::string generatecrypt(std::string data)
+{
+    unsigned int result(0);
+
+    for(unsigned int ch : data)
+    result=ch + (result<<4) + (result<<10) - result;
+
+    return std::to_string(result);
+}
+
 int main() {
     std::string mobile_number, password;
 
@@ -41,8 +52,9 @@ int main() {
     std::getline(std::cin, mobile_number);
     std::cout << "Enter your password: ";
     std::getline(std::cin, password);
+    std::string hashedPassword = generatecrypt(password);
 
-    if (verifyLogin(mobile_number, password)) {
+    if (verifyLogin(mobile_number, hashedPassword)) {
         std::cout << "Login successful!\n";
     } else {
         std::cout << "Login failed.\n";
