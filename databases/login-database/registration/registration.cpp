@@ -108,6 +108,17 @@ bool isPhoneNumberRegistered(const std::string& mobile_number) {
     return registered;
 }
 
+//function to generate a encryption
+std::string generatecrypt(std::string data)
+{
+    unsigned int result(0);
+
+    for(unsigned int ch : data)
+    result=ch + (result<<4) + (result<<10) - result;
+
+    return std::to_string(result);
+}
+
 // Function to register a user
 bool registerUser(const std::string& mobile_number, const std::string& password, const std::string& confirm_password, const std::string& gmail) {
     if (!isGmailValid(gmail)) {
@@ -133,11 +144,14 @@ bool registerUser(const std::string& mobile_number, const std::string& password,
     sqlite3* db;
     sqlite3_stmt* stmt;
 
+    //encrypt
+    std::string hashedPassword = generatecrypt(password);
+
     if (sqlite3_open("registration.db", &db) == SQLITE_OK) {
         const char* sql = "INSERT INTO Users (mobile_number, password, gmail) VALUES (?, ?, ?)";
         if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
             sqlite3_bind_text(stmt, 1, mobile_number.c_str(), -1, SQLITE_STATIC);
-            sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_text(stmt, 2, hashedPassword.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_text(stmt, 3, gmail.c_str(), -1, SQLITE_STATIC);
 
             if (sqlite3_step(stmt) == SQLITE_DONE) {
