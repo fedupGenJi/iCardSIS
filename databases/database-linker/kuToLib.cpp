@@ -3,7 +3,7 @@
 
 int main() {
     // Provide the full paths to your databases
-    std::string sourceDbPath = "A:\\iCardSIS\\databases\\ku-database\\example.db";
+    std::string sourceDbPath = "A:\\iCardSIS\\databases\\ku-database\\ku-database.db";
     std::string targetDbPath = "A:\\iCardSIS\\databases\\library-database\\library.db";
     std::string sourceTable = "studentID"; // Source table name with IDs
     std::string targetTable = "Borrowers"; // Target table name with studentID column

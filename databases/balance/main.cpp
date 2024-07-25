@@ -26,7 +26,7 @@ bool checkStudentIdExists(sqlite3* DB, int studentId) {
 
 int main() {
     sqlite3* DB;
-    int exit = sqlite3_open("balance.db", &DB);
+    int exit = sqlite3_open("A:\\iCardSIS\\databases\\ku-database\\ku-database.db", &DB);
 
     if (exit) {
         std::cerr << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
@@ -35,7 +35,7 @@ int main() {
         std::cout << "Opened Database Successfully!" << std::endl;
     }
 
-    std::string sql = "CREATE TABLE IF NOT EXISTS Student ("
+    std::string sql = "CREATE TABLE IF NOT EXISTS Balance ("
                       "studentId INTEGER PRIMARY KEY, "
                       "balance INTEGER DEFAULT 0);";
 

@@ -8,7 +8,7 @@ void addData(DatabaseHelper& dbHelper);
 void deleteData(DatabaseHelper& dbHelper);
 
 int main() {
-    DatabaseHelper dbHelper("example.db");//use studentData for the main database
+    DatabaseHelper dbHelper("ku-database.db");//use studentData for the main database
     dbHelper.createTable();
     int choice;
     while (true) {
