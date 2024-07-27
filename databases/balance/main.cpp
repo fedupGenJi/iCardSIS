@@ -1,30 +1,78 @@
 #include <iostream>
 #include "A:\iCardSIS\vendors\sqlite\sqlite3.h"
+#include "include/databaseoperation.h"
+#include "include/balanceOperation.h"
+#include "include/fineOperation.h"
+#include "include/busSubscription.h"
 
-bool checkStudentIdExists(sqlite3* DB, int studentId) {
-    std::string sql = "SELECT COUNT(*) FROM Student WHERE studentId = ?;";
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, nullptr);
+using namespace std;
 
-    if (rc != SQLITE_OK) {
-        std::cerr << "Failed to prepare statement" << std::endl;
-        return false;
-    }
-
-    sqlite3_bind_int(stmt, 1, studentId);
-
-    rc = sqlite3_step(stmt);
-    int count = 0;
-    if (rc == SQLITE_ROW) {
-        count = sqlite3_column_int(stmt, 0);
-    }
-
-    sqlite3_finalize(stmt);
-
-    return count > 0;
-}
+void showOptions(sqlite3 *db, sqlite3 *finesDb, int studentId);
 
 int main() {
+    sqlite3 *db, *finesDb;
+    int rc = sqlite3_open("A:\\iCardSIS\\databases\\ku-database\\ku-database.db", &db);
+    if (rc) {
+        cerr << "Can't open ku-database: " << sqlite3_errmsg(db) << endl;
+        return rc;
+    }
+
+    rc = sqlite3_open("A:\\iCardSIS\\databases\\library-database\\library.db", &finesDb);
+    if (rc) {
+        cerr << "Can't open fine database: " << sqlite3_errmsg(finesDb) << endl;
+        sqlite3_close(db);
+        return rc;
+    }
+
+    int studentId;
+    cout << "Enter student ID: ";
+    cin >> studentId;
+
+    if (!checkStudentId(db, studentId)) {
+        cerr << "Student ID not found!" << endl;
+        sqlite3_close(db);
+        sqlite3_close(finesDb);
+        return 1;
+    }
+
+    showOptions(db, finesDb, studentId);
+
+    sqlite3_close(db);
+    sqlite3_close(finesDb);
+    return 0;
+}
+
+void showOptions(sqlite3 *db, sqlite3 *finesDb, int studentId) {
+    int option;
+    while (true) {
+        cout << "Choose an option: \n1. Add Balance\n2. Transfer Balance\n3. Pay Fines\n4. Bus Subscription\n5. Exit\n";
+        cin >> option;
+
+        switch (option) {
+            case 1:
+                addBalance(db, studentId);
+                break;
+            case 2:
+                transferBalance(db, studentId);
+                break;
+            case 3:
+                payFines(finesDb, db, studentId);
+                break;
+            case 4:
+                bus_Subscription(db, studentId);
+                break;
+            case 5:
+                cout << "Exiting..." << endl;
+                return;
+            default:
+                cerr << "Invalid option!" << endl;
+                break;
+        }
+    }
+}
+
+//use this function to create table for Balance
+/*int main() {
     sqlite3* DB;
     int exit = sqlite3_open("A:\\iCardSIS\\databases\\ku-database\\ku-database.db", &DB);
 
@@ -48,17 +96,6 @@ int main() {
     } else {
         std::cout << "Table created Successfully" << std::endl;
     }
-
-    int studentId;
-    std::cout << "Enter student ID: ";
-    std::cin >> studentId;
-
-    if (checkStudentIdExists(DB, studentId)) {
-        std::cout << "Student ID " << studentId << " exists in the database." << std::endl;
-    } else {
-        std::cout << "Student ID " << studentId << " does not exist in the database." << std::endl;
-    }
-
     sqlite3_close(DB);
     return 0;
-}
+}*/
