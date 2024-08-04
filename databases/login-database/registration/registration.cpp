@@ -42,7 +42,7 @@ bool isGmailValid(const std::string& gmail) {
     sqlite3_stmt* stmt;
     bool valid = false;
 
-    if (sqlite3_open("A:\\iCardSIS\\databases\\ku-database\\example.db", &db) == SQLITE_OK) {
+    if (sqlite3_open("A:\\iCardSIS\\databases\\ku-database\\ku-database.db", &db) == SQLITE_OK) {
         const char* sql = "SELECT COUNT(*) FROM studentId WHERE email = ?";
         if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
             sqlite3_bind_text(stmt, 1, gmail.c_str(), -1, SQLITE_STATIC);
