@@ -56,6 +56,12 @@ int main() {
 
     if (verifyLogin(mobile_number, hashedPassword)) {
         std::cout << "Login successful!\n";
+        
+        /*
+            string gmail;
+             ku-database(gmail)~studentId;
+        */
+        //first_page(studentId)
     } else {
         std::cout << "Login failed.\n";
     }
