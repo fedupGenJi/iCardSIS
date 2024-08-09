@@ -1,6 +1,7 @@
 #include <iostream>
 #include "A:\iCardSIS\vendors\sqlite\sqlite3.h"
 #include <string>
+#include "A:\iCardSIS\databases\pages\firstPage\studentInfo.h"
 
 // Function to verify user login
 bool verifyLogin(const std::string& mobile_number, const std::string& password) {
@@ -106,6 +107,7 @@ int main() {
         int studentId = getStudentIdFromPhoneNumber(mobile_number);
     if (studentId != -1) {
         std::cout << "Student ID: " << studentId << std::endl;
+        firstPage(studentId);
     } else {
         std::cout << "No student ID found for the given phone number." << std::endl;
     }
