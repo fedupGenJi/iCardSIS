@@ -45,6 +45,52 @@ std::string generatecrypt(std::string data)
     return std::to_string(result);
 }
 
+int getStudentIdFromPhoneNumber(const std::string& phoneNumber) {
+    sqlite3* db;
+    sqlite3_stmt* stmt;
+    int rc;
+    int studentId = -1; // Default value indicating not found
+
+    // Open the SQLite database
+    rc = sqlite3_open("A:/iCardSIS/databases/ku-database/ku-database.db", &db);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
+        return studentId;
+    }
+
+    // Prepare the SQL statement
+    std::string sql = "SELECT studentId FROM phoneNId WHERE phoneNumber = ?";
+    rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_close(db);
+        return studentId;
+    }
+
+    // Bind the phone number to the statement
+    rc = sqlite3_bind_text(stmt, 1, phoneNumber.c_str(), -1, SQLITE_STATIC);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to bind phone number: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return studentId;
+    }
+
+    // Execute the statement
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW) {
+        studentId = sqlite3_column_int(stmt, 0);
+    } else {
+        std::cerr << "Database not updated. Phone number not found." << std::endl;
+    }
+
+    // Clean up
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return studentId;
+}
+
 int main() {
     std::string mobile_number, password;
 
@@ -57,11 +103,13 @@ int main() {
     if (verifyLogin(mobile_number, hashedPassword)) {
         std::cout << "Login successful!\n";
         
-        /*
-            string gmail;
-             ku-database(gmail)~studentId;
-        */
-        //first_page(studentId)
+        int studentId = getStudentIdFromPhoneNumber(mobile_number);
+    if (studentId != -1) {
+        std::cout << "Student ID: " << studentId << std::endl;
+    } else {
+        std::cout << "No student ID found for the given phone number." << std::endl;
+    }
+        
     } else {
         std::cout << "Login failed.\n";
     }
