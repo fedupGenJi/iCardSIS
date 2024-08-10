@@ -3,7 +3,7 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
-
+#include "A:\iCardSIS\databases\pages\auditLogPage\auditInput.h"
 // Constructor: Opens the database and initializes it
 LibManager::LibManager(const std::string& dbPath) : db(nullptr) {
     int rc = sqlite3_open(dbPath.c_str(), &db);
@@ -110,8 +110,11 @@ void LibManager::addBook(int studentID, const std::string& bookID, const std::st
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
         std::cerr << "Error inserting data: " << sqlite3_errmsg(db) << std::endl;
+        return;
     }
     sqlite3_finalize(stmt);
+    std :: string text = "Added " + bookName + " with Submission Date: " + submissionDate;
+    insertActivity(studentID,text);
 }
 
 // Remove a book record from the Books table
@@ -137,6 +140,26 @@ void LibManager::removeBook(int studentID, const std::string& bookID) {
         std::cerr << "Error: No book with ID " << bookID << " found for student ID " << studentID << "." << std::endl;
         return;
     }
+    //get the BookName
+    const char* getBookNameSQL = "SELECT bookName FROM Books WHERE studentID = ? AND bookID = ?";
+    sqlite3_stmt* getNameStmt;
+    rc = sqlite3_prepare_v2(db, getBookNameSQL, -1, &getNameStmt, 0);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+    sqlite3_bind_int(getNameStmt, 1, studentID);
+    sqlite3_bind_text(getNameStmt, 2, bookID.c_str(), -1, SQLITE_TRANSIENT);
+    std::string bookName;
+    rc = sqlite3_step(getNameStmt);
+    if (rc == SQLITE_ROW) {
+        bookName = reinterpret_cast<const char*>(sqlite3_column_text(getNameStmt, 0));
+    } else {
+        std::cerr << "Error retrieving book name: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(getNameStmt);
+        return;
+    }
+    sqlite3_finalize(getNameStmt);
 
     // Delete the book record if it exists
     const char* deleteSQL = "DELETE FROM Books WHERE studentID = ? AND bookID = ?";
@@ -151,6 +174,14 @@ void LibManager::removeBook(int studentID, const std::string& bookID) {
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
         std::cerr << "Error deleting data: " << sqlite3_errmsg(db) << std::endl;
+        return;
     }
     sqlite3_finalize(stmt);
+
+
+
+
+    
+    std :: string text = "Removed " + bookName;
+    insertActivity(studentID,text);
 }
