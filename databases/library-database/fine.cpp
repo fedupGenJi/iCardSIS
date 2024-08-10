@@ -5,9 +5,9 @@
 #include <sstream>
 #include <chrono>
 #include <cmath>
-
+#include "A:\iCardSIS\databases\pages\auditLogPage\auditInput.h"
 // Function to get the current date in YYYY-MM-DD format
-std::string getCurrentDate() {
+std::string CurrentDate() {
     time_t now = time(0);
     tm *ltm = localtime(&now);
     
@@ -54,7 +54,7 @@ int main() {
         return 1;
     }
     
-    std::string current_date = getCurrentDate();
+    std::string current_date = CurrentDate();
     std::cout << "Current date: " << current_date << std::endl;
     
     // Execute the query and calculate fines
@@ -62,6 +62,7 @@ int main() {
         int studentId = sqlite3_column_int(stmt, 0);
         const unsigned char* deadline = sqlite3_column_text(stmt, 1);
         std::string deadline_str(reinterpret_cast<const char*>(deadline));
+        
         int days_dued = sqlite3_column_int(stmt, 2);
         
         int days_overdue = dateDifference(deadline_str, current_date);
@@ -114,8 +115,12 @@ int main() {
                 sqlite3_close(db);
                 return 1;
             }
+            const unsigned char* bookName = sqlite3_column_text(stmt, 1);
+            std::string book_name(reinterpret_cast<const char*>(bookName));
 
             sqlite3_finalize(update_days_stmt);
+            std :: string text = "Added fine of " + std :: to_string(fine) + " for " + book_name + ".";
+            insertActivity(studentId,text);
         }
     }
     
