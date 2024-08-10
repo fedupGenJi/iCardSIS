@@ -5,7 +5,7 @@
 #include <sstream>
 #include <chrono>
 #include <cmath>
-#include "A:\iCardSIS\databases\pages\auditLogPage\auditInput.h"
+#include "A:\iCardSIS\pages\auditLogPage\auditInput.h"
 // Function to get the current date in YYYY-MM-DD format
 std::string CurrentDate() {
     time_t now = time(0);

@@ -178,8 +178,9 @@ int main() {
     // Create the Users table if it doesn't exist
     createUsersTable();
 
-    std::string mobile_number, password, confirm_password, gmail;
-    
+    std::string mobile_number, password, confirm_password, gmail,userName;
+    std::cout<<"Enter Username:";
+    std::getline(std::cin,userName);
     std::cout << "Enter your mobile number: ";
     std::getline(std::cin, mobile_number);
     std::cout << "Enter your password: ";
@@ -189,7 +190,10 @@ int main() {
     std::cout << "Enter your Gmail address: ";
     std::getline(std::cin, gmail);
 
-    registerUser(mobile_number, password, confirm_password, gmail);
+    if(registerUser(mobile_number, password, confirm_password, gmail))
+    {
+        std::cout<<"Welcome "<<userName;
+    }
 
     return 0;
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "A:\iCardSIS\vendors\sqlite\sqlite3.h"
 #include <string>
-#include "A:\iCardSIS\databases\pages\firstPage\studentInfo.h"
+#include "A:\iCardSIS\pages\firstPage\studentInfo.h"
 
 // Function to verify user login
 bool verifyLogin(const std::string& mobile_number, const std::string& password) {

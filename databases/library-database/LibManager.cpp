@@ -3,7 +3,8 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
-#include "A:\iCardSIS\databases\pages\auditLogPage\auditInput.h"
+#include "A:\iCardSIS\pages\auditLogPage\auditInput.h"
+
 // Constructor: Opens the database and initializes it
 LibManager::LibManager(const std::string& dbPath) : db(nullptr) {
     int rc = sqlite3_open(dbPath.c_str(), &db);
