@@ -39,7 +39,7 @@ int main() {
     sqlite3* db;
     sqlite3_stmt* stmt;
     const char* db_name = "library.db";
-    const char* sql_query = "SELECT studentId, Deadline, days_dued FROM Books";
+    const char* sql_query = "SELECT studentId, Deadline, days_dued, bookName FROM Books";
     
     // Open the SQLite database
     if (sqlite3_open(db_name, &db) != SQLITE_OK) {
@@ -115,10 +115,13 @@ int main() {
                 sqlite3_close(db);
                 return 1;
             }
-            const unsigned char* bookName = sqlite3_column_text(stmt, 1);
-            std::string book_name(reinterpret_cast<const char*>(bookName));
+            
 
             sqlite3_finalize(update_days_stmt);
+
+            const unsigned char* bookName = sqlite3_column_text(stmt, 3);
+            std :: string book_name(reinterpret_cast<const char*>(bookName));
+
             std :: string text = "Added fine of " + std :: to_string(fine) + " for " + book_name + ".";
             insertActivity(studentId,text);
         }
