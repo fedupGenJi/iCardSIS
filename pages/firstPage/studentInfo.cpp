@@ -9,7 +9,7 @@ StudentInfo getStudentInfo(int studentId) {
     StudentInfo studentInfo;
 
     // Open the SQLite database
-    rc = sqlite3_open("../ku-database/ku-database.db", &db);
+    rc = sqlite3_open("A:/iCardSIS/databases/ku-database/ku-database.db", &db);
     if (rc != SQLITE_OK) {
         std::cerr << "Cannot open database: " << sqlite3_errmsg(db) << std::endl;
         return studentInfo;
