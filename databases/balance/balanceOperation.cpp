@@ -1,5 +1,6 @@
 #include "include/balanceOperation.h"
 #include "include/databaseOperation.h"
+#include "A:\iCardSIS\databases\pages\auditLogPage\auditInput.h"
 #include <iostream>
 #include <string>
 
@@ -39,6 +40,8 @@ void addBalance(sqlite3 *db, int studentId) {
 
     if (updateBalance(db, studentId, amount)) {
         cout << "Balance added successfully!" << endl;
+        string textmsg = "Balance of " + to_string(amount) + "added succesfully.";
+        insertActivity(studentId,textmsg);
     }
 }
 
@@ -81,5 +84,9 @@ void transferBalance(sqlite3 *db, int studentId) {
 
     if (updateBalance(db, studentId, -amount) && updateBalance(db, recipientStudentId, amount)) {
         cout << "Balance transferred successfully to student ID: " << recipientStudentId << endl;
+        string textmsg = "Balance of " + to_string(amount) + "transferred succesfully to " + to_string(recipientStudentId) + ".";
+        insertActivity(studentId,textmsg);
+        string text = "Balance of " + to_string(amount) + "received succesfully from " + to_string(studentId) + ".";
+        insertActivity(recipientStudentId,text);
     }
 }

@@ -1,6 +1,8 @@
 #include "include/fineOperation.h"
 #include "include/databaseOperation.h"
+#include "A:\iCardSIS\databases\pages\auditLogPage\auditInput.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -57,5 +59,7 @@ void payFines(sqlite3 *finesDb, sqlite3 *db, int studentId) {
 
     if (updateBalance(db, studentId, -fineAmount)) {
         cout << "Fine paid successfully!" << endl;
+        string textmsg = "Paid Fine of " + to_string(fineAmount) +".";
+        insertActivity(studentId,textmsg);
     }
 }
