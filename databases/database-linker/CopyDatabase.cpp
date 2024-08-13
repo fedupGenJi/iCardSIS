@@ -90,12 +90,19 @@ void CopyDatabase::displayTable(const std::string& tableName) {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return;
     }
+
     int cols = sqlite3_column_count(stmt);
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         for (int col = 0; col < cols; col++) {
-            std::cout << sqlite3_column_text(stmt, col) << " ";
+            if (sqlite3_column_type(stmt, col) == SQLITE_NULL) {
+                std::cout << "NULL ";
+            } else {
+                const unsigned char* text = sqlite3_column_text(stmt, col);
+                std::cout << (text ? reinterpret_cast<const char*>(text) : "NULL") << " ";
+            }
         }
         std::cout << std::endl;
     }
+
     sqlite3_finalize(stmt);
 }
