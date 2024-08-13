@@ -28,7 +28,7 @@ int main() {
     }
 
     // Specify the table name to delete
-    std::string tableName = "phoneNId";
+    std::string tableName = "Transportation";
 
     // Delete the specified table
     deleteTable(db, tableName);
