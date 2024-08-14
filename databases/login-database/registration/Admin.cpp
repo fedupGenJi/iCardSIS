@@ -93,6 +93,34 @@ bool changePhoneNumber(const std::string& gmail, const std::string& new_phone_nu
     return success;
 }
 
+// Function to remove a Gmail from the phoneNId table
+bool removeFromPhoneNIdTable(const std::string& gmail) {
+    sqlite3* db;
+    sqlite3_stmt* stmt;
+    bool success = false;
+
+    if (sqlite3_open("A:/iCardSIS/databases/ku-database/ku-database.db", &db) == SQLITE_OK) {
+        const char* sql = "DELETE FROM phoneNId WHERE gmail = ?";
+        if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+            sqlite3_bind_text(stmt, 1, gmail.c_str(), -1, SQLITE_STATIC);
+            if (sqlite3_step(stmt) == SQLITE_DONE) {
+                std::cout << "User with Gmail " << gmail << " removed successfully from phoneNId table.\n";
+                success = true;
+            } else {
+                std::cerr << "Error during removal from phoneNId table: " << sqlite3_errmsg(db) << "\n";
+            }
+            sqlite3_finalize(stmt);
+        } else {
+            std::cerr << "Failed to prepare statement for phoneNId table: " << sqlite3_errmsg(db) << "\n";
+        }
+        sqlite3_close(db);
+    } else {
+        std::cerr << "Failed to open database: " << sqlite3_errmsg(db) << "\n";
+    }
+
+    return success;
+}
+
 int main() {
     int choice;
     std::string gmail, new_phone_number;
@@ -107,13 +135,17 @@ int main() {
     if (choice == 1) {
         std::cout << "Enter the Gmail address of the user to remove: ";
         std::getline(std::cin, gmail);
-        removeUserByGmail(gmail);
+         if (removeUserByGmail(gmail)) {
+            removeFromPhoneNIdTable(gmail);
+        }
     } else if (choice == 2) {
         std::cout << "Enter the Gmail address of the user: ";
         std::getline(std::cin, gmail);
         std::cout << "Enter the new phone number: ";
         std::getline(std::cin, new_phone_number);
-        changePhoneNumber(gmail, new_phone_number);
+        if (changePhoneNumber(gmail, new_phone_number)) {
+            removeFromPhoneNIdTable(gmail);
+        }
     } else {
         std::cout << "Invalid choice.\n";
     }
