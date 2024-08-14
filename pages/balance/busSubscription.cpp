@@ -110,7 +110,7 @@ void updateTransportation(sqlite3* db, int studentId, int choice) {
         cerr << "Failed to update Balance table: " << sqlite3_errmsg(db) << endl;
     }
     cout << "Balance is deducted!" << endl;
-    string balancemsg = cost + " is deducted for Bus Subscription.";
+    string balancemsg = to_string(cost) + " is deducted for Bus Subscription.";
         insertActivity(studentId,balancemsg);
     sqlite3_finalize(stmt);
 }
