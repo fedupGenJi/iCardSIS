@@ -8,6 +8,7 @@
 using namespace std;
 
 void showOptions(sqlite3 *db, sqlite3 *finesDb, int studentId);
+int showBalance(sqlite3 *db, int studentId);
 
 int main() {
     sqlite3 *db, *finesDb;
@@ -34,7 +35,8 @@ int main() {
         sqlite3_close(finesDb);
         return 1;
     }
-
+    int balance = showBalance(db,studentId);
+    cout << "Current Balance: " << balance << endl;
     showOptions(db, finesDb, studentId);
 
     sqlite3_close(db);
@@ -69,6 +71,38 @@ void showOptions(sqlite3 *db, sqlite3 *finesDb, int studentId) {
                 break;
         }
     }
+}
+
+int showBalance(sqlite3 *db, int studentId)
+{
+    sqlite3_stmt* stmt;
+    const char* query = "SELECT balance FROM Balance WHERE studentId = ?";
+    int balance = -1; // Initializing balance to -1 to indicate an error if not found
+
+    // Prepare the SQL statement
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return balance;
+    }
+
+    // Bind the studentId parameter to the SQL query
+    if (sqlite3_bind_int(stmt, 1, studentId) != SQLITE_OK) {
+        std::cerr << "Failed to bind studentId: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return balance;
+    }
+
+    // Execute the SQL query and retrieve the result
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        balance = sqlite3_column_int(stmt, 0);
+    } else {
+        std::cerr << "No balance found for studentId: " << studentId << std::endl;
+    }
+
+    // Finalize the statement
+    sqlite3_finalize(stmt);
+
+    return balance;
 }
 
 //use this function to create table for Balance
