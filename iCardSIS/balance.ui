@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>balance</class>
+ <widget class="QMainWindow" name="balance">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1600</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>iCardSIS</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(224, 225, 255);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>40</y>
+      <width>190</width>
+      <height>190</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="images/src.qrc">:/images/4.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_addbalance">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>330</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 16pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+    </property>
+    <property name="text">
+     <string>Add Balance</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_transferbalance">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>390</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 16pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+    </property>
+    <property name="text">
+     <string>Transfer Balance</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>260</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 16pt Times New Roman;
+color:red</string>
+    </property>
+    <property name="text">
+     <string>Balance:-</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton__bus">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>450</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 16pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+    </property>
+    <property name="text">
+     <string>Bus Subscription</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_availBal">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>250</y>
+      <width>101</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);
+font: 700 12pt &quot;Times New Roman&quot;;</string>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="payFine">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>500</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 16pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+    </property>
+    <property name="text">
+     <string>Pay Fine</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="images/src.qrc"/>
+ </resources>
+ <connections/>
+</ui>

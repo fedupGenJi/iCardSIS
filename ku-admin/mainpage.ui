@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Mainpage</class>
+ <widget class="QMainWindow" name="Mainpage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1600</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>iCardSIS</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/image/images/2.jpg</normaloff>:/image/images/2.jpg</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(224, 225, 255);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>20</y>
+      <width>190</width>
+      <height>190</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resource.qrc">:/image/images/4.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_transferbalance">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>800</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 16pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+    </property>
+    <property name="text">
+     <string>Transfer Balance</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>-60</x>
+      <y>230</y>
+      <width>1800</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 16pt Times New Roman;
+color:white;
+background-color: maroon</string>
+    </property>
+    <property name="text">
+     <string>KU-ADMIN</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>390</y>
+      <width>381</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: grey;
+font: 700 14pt &quot;Times New Roman&quot;;
+color:black</string>
+    </property>
+    <property name="title">
+     <string>Database Options:</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_add">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>40</y>
+       <width>241</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 13pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+     </property>
+     <property name="text">
+      <string>Add To KU-database</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_up">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>110</y>
+       <width>241</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 13pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+     </property>
+     <property name="text">
+      <string>Update database</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_reg">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>180</y>
+       <width>241</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 13pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+     </property>
+     <property name="text">
+      <string>Registration-Admin</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_canteen">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>250</y>
+       <width>241</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{color: black;
+
+border-radius: 20px;
+font: 700 13pt Times New Roman;
+background-color: white
+
+}
+QPushButton:pressed{background-color: rgb(170, 0, 0);}</string>
+     </property>
+     <property name="text">
+      <string>Canteen</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>320</y>
+      <width>341</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: grey;
+font: 700 14pt &quot;Times New Roman&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Please select the required option:</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
